@@ -2,32 +2,10 @@ import { useState } from 'react'
 import { Button, Layout, Menu, MenuProps } from 'antd'
 import { ROUTE_PATHS } from '../../routes/route-paths.constant'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import {
-  MdAccountBalanceWallet,
-  MdOutlinePauseCircleFilled,
-  MdRateReview,
-} from 'react-icons/md'
-import { IoIosLogOut, IoMdColorFilter } from 'react-icons/io'
-import {
-  IoBook,
-  IoHome,
-  IoInformationCircle,
-  IoMenuOutline,
-  IoNotificationsSharp,
-} from 'react-icons/io5'
+import { IoIosLogOut } from 'react-icons/io'
+import { IoHome, IoMenuOutline } from 'react-icons/io5'
 import './style.css'
-import {
-  FaCalendarAlt,
-  FaRegistered,
-  FaUserGraduate,
-  FaUserTie,
-  FaUsers,
-} from 'react-icons/fa'
-import { BsFillHousesFill } from 'react-icons/bs'
-import { RiCalendarScheduleFill } from 'react-icons/ri'
-import { SiCashapp } from 'react-icons/si'
-import { TbReportAnalytics } from 'react-icons/tb'
-import Breadcrumb from '../../components/Breadcrumb/Breadcrumb'
+import { FaUserTie } from 'react-icons/fa'
 
 const AppLayout = () => {
   // const setCurrentUser = useAppStore((stage) => stage.setCurrentUser)
@@ -55,104 +33,7 @@ const AppLayout = () => {
           label: <Link to={ROUTE_PATHS.TEACHER}>Giáo viên</Link>,
           icon: <FaUserTie />,
         },
-        {
-          key: ROUTE_PATHS.STUDENT,
-          label: <Link to={ROUTE_PATHS.STUDENT}>Học viên</Link>,
-          icon: <FaUserGraduate />,
-        },
-        {
-          key: ROUTE_PATHS.ACCOUNT,
-          label: <Link to={ROUTE_PATHS.ACCOUNT}>Tài khoản</Link>,
-          icon: <MdAccountBalanceWallet />,
-        },
-        {
-          key: ROUTE_PATHS.FACILITY,
-          label: <Link to={ROUTE_PATHS.FACILITY}>Cơ sở</Link>,
-          icon: <BsFillHousesFill />,
-        },
       ],
-    },
-    {
-      key: 'grp2',
-      label: 'Quản lí giảng dạy',
-      type: 'group',
-      children: [
-        {
-          key: 'course',
-          label: 'Khóa học',
-          icon: <IoBook />,
-          children: [
-            {
-              key: ROUTE_PATHS.COURSE,
-              label: <Link to={ROUTE_PATHS.COURSE}>Thông tin</Link>,
-              icon: <IoInformationCircle />,
-            },
-            {
-              key: ROUTE_PATHS.REGISTER,
-              label: <Link to={ROUTE_PATHS.REGISTER}>Đăng kí</Link>,
-              icon: <FaRegistered />,
-            },
-            {
-              key: ROUTE_PATHS.DEFER,
-              label: <Link to={ROUTE_PATHS.DEFER}>Bảo lưu</Link>,
-              icon: <MdOutlinePauseCircleFilled />,
-            },
-          ],
-        },
-        {
-          key: 'calendar',
-          label: 'Lịch học',
-          icon: <RiCalendarScheduleFill />,
-          children: [
-            {
-              key: ROUTE_PATHS.SCHEDULE,
-              label: <Link to={ROUTE_PATHS.SCHEDULE}>Xếp lịch học</Link>,
-              icon: <RiCalendarScheduleFill />,
-            },
-            {
-              key: ROUTE_PATHS.CALENDAR,
-              label: <Link to={ROUTE_PATHS.CALENDAR}>Thời khoá biểu</Link>,
-              icon: <FaCalendarAlt />,
-            },
-          ],
-        },
-        {
-          key: 'lesson',
-          label: 'Theo dõi buổi học',
-          icon: <FaUsers />,
-          children: [
-            {
-              key: ROUTE_PATHS.ATTENDANCE,
-              label: <Link to={ROUTE_PATHS.ATTENDANCE}>Điểm danh</Link>,
-              icon: <IoMdColorFilter />,
-            },
-            {
-              key: ROUTE_PATHS.REVIEW,
-              label: <Link to={ROUTE_PATHS.REVIEW}>Nhận xét</Link>,
-              icon: <MdRateReview />,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: ROUTE_PATHS.FINANCE,
-      label: <Link to={ROUTE_PATHS.FINANCE}>Quản lí tài chính</Link>,
-      icon: <SiCashapp />,
-    },
-    {
-      key: ROUTE_PATHS.REPORT,
-      label: <Link to={ROUTE_PATHS.REPORT}>Xuất báo cáo</Link>,
-      icon: <TbReportAnalytics />,
-    },
-
-    {
-      key: ROUTE_PATHS.NOTICE,
-      label: <Link to={ROUTE_PATHS.NOTICE}>Thông báo</Link>,
-      icon: <IoNotificationsSharp />,
     },
   ]
 
@@ -214,7 +95,6 @@ const AppLayout = () => {
                   height: '100%',
                 }}
               >
-                <Breadcrumb />
                 <Outlet />
               </div>
             </Content>
