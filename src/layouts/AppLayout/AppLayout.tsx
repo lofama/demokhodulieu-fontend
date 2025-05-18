@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { Button, Layout, Menu, MenuProps } from 'antd'
 import { ROUTE_PATHS } from '../../routes/route-paths.constant'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { IoIosLogOut } from 'react-icons/io'
+import { IoIosLogOut, IoMdColorFilter } from 'react-icons/io'
 import { IoHome, IoMenuOutline } from 'react-icons/io5'
 import './style.css'
-import { FaUserTie } from 'react-icons/fa'
+import { FaUsers, FaUserTie } from 'react-icons/fa'
+import { MdRateReview } from 'react-icons/md'
 
 const AppLayout = () => {
   // const setCurrentUser = useAppStore((stage) => stage.setCurrentUser)
@@ -24,16 +25,9 @@ const AppLayout = () => {
       icon: <IoHome />,
     },
     {
-      key: 'grp1',
-      label: 'Quản lí tài nguyên',
-      type: 'group',
-      children: [
-        {
-          key: ROUTE_PATHS.TEACHER,
-          label: <Link to={ROUTE_PATHS.TEACHER}>Giáo viên</Link>,
-          icon: <FaUserTie />,
-        },
-      ],
+      key: ROUTE_PATHS.INVENTORY,
+      label: <Link to={ROUTE_PATHS.INVENTORY}>Ton kho</Link>,
+      icon: <IoHome />,
     },
   ]
 
@@ -58,7 +52,7 @@ const AppLayout = () => {
                 borderRadius: '0.25rem',
               }}
             >
-              ROSE MUSIC
+              DASHBOARD
             </span>
           </Link>
           <Button icon={<IoIosLogOut />} href={ROUTE_PATHS.LOGIN}>

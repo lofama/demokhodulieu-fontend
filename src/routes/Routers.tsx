@@ -23,7 +23,7 @@ const Routers = () => {
           ),
         },
         {
-          path: ROUTE_PATHS.TEACHER,
+          path: ROUTE_PATHS.INVENTORY,
           element: (
             <ProtectedRoute>
               <FacilityScreen />

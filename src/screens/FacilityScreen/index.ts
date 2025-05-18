@@ -1,4 +1,3 @@
-import FacilityScreen from './FacilityScreen'
-import CreateFacilityScreen from './CreateFacilityScreen'
+import InventoryScreen from './FacilityScreen'
 
-export { FacilityScreen, CreateFacilityScreen }
+export { InventoryScreen as FacilityScreen }

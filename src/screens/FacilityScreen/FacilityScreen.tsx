@@ -1,63 +1,107 @@
-import { Button, Card, Drawer, Flex, Image, Typography } from 'antd'
-import { BsEyeFill, BsHouseCheck } from 'react-icons/bs'
-import { IoSettingsOutline } from 'react-icons/io5'
-import { MdModeEditOutline } from 'react-icons/md'
-import { Link, generatePath } from 'react-router-dom'
-import { ROUTE_PATHS } from '../../routes/route-paths.constant'
+import { Flex, Pagination, Table, TableColumnsType, Typography } from 'antd'
 import { useState } from 'react'
-import CreateFacilityScreen from './CreateFacilityScreen'
-import { useGetFacilitys } from '../../api/api-hooks/facility'
+import { useGetSumaryInventory } from '../../api/api-hooks/inventory'
 
-const { Meta } = Card
+export interface InventorySumary {
+  MaMatHang: string
+  MaCuaHang: string
+  SoLuongTonKho: string
+  TenThanhPho: string
+  Bang: string
+  MoTa: string
+  KichCo: string
+  TrongLuong: string
+  Gia: string
+  NgayDatHang: string
+}
 
-const FacilityScreen = () => {
-  const [open, setOpen] = useState(false)
-  const { data: facilityData, refetch } = useGetFacilitys()
+const InventoryScreen = () => {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
-  const showDrawer = () => {
-    setOpen(true)
+  const { data: inventories } = useGetSumaryInventory({
+    page,
+    pageSize,
+  })
+
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    setPage(page)
+    setPageSize(pageSize)
   }
 
-  const onClose = () => {
-    refetch()
-    setOpen(false)
-  }
+  const columns: TableColumnsType<InventorySumary> = [
+    {
+      title: 'Mã mặt hàng',
+      dataIndex: 'MaMatHang',
+      key: 'MaMatHang',
+    },
+    {
+      title: 'Mã cửa hàng',
+      dataIndex: 'MaCuaHang',
+      key: 'MaCuaHang',
+    },
+    {
+      title: 'Số lượng tồn kho',
+      dataIndex: 'SoLuongTonKho',
+      key: 'SoLuongTonKho',
+    },
+    {
+      title: 'Tên thành phố',
+      dataIndex: 'TenThanhPho',
+      key: 'TenThanhPho',
+    },
+    {
+      title: 'Bảng',
+      dataIndex: 'Bang',
+      key: 'Bang',
+    },
+    {
+      title: 'Mô tả',
+      dataIndex: 'MoTa',
+      key: 'MoTa',
+    },
+    {
+      title: 'Kích cỡ',
+      dataIndex: 'KichCo',
+      key: 'KichCo',
+    },
+    {
+      title: 'Trọng lượng',
+      dataIndex: 'TrongLuong',
+      key: 'TrongLuong',
+    },
+    {
+      title: 'Giá',
+      dataIndex: 'Gia',
+      key: 'Gia',
+    },
+  ]
+
   return (
     <div>
       <Flex justify="space-between">
-        <Typography.Title level={2}>Danh sách cơ sở</Typography.Title>
-        <Button onClick={showDrawer}>Thêm</Button>
+        <Typography.Title level={2}>Hang ton kho</Typography.Title>
+        <Pagination
+          current={page}
+          pageSize={pageSize}
+          total={inventories?.meta?.total}
+          showSizeChanger={true}
+          pageSizeOptions={['10', '20', '50', '100']}
+          showTotal={(total) => `Tổng số: ${total}`}
+          onChange={handlePaginationChange}
+          responsive={true}
+          showLessItems={true}
+        />
       </Flex>
-      <Flex justify="space-around" wrap gap={30}>
-        {facilityData?.data.map((facility, index) => (
-          <Card
-            key={index}
-            style={{ width: 300 }}
-            cover={<Image alt="example" src={facility.imageUrl} />}
-            actions={[
-              <Link
-                to={generatePath(ROUTE_PATHS.FACILITY_DETAIL, {
-                  id: facility.id,
-                })}
-              >
-                <BsEyeFill key="view" />
-              </Link>,
-              <MdModeEditOutline key="edit" />,
-            ]}
-          >
-            <Meta
-              avatar={<BsHouseCheck />}
-              title={facility.name}
-              description={facility.address}
-            />
-          </Card>
-        ))}
-      </Flex>
-      <Drawer title="Tạo cơ sở mới" onClose={onClose} open={open} width={500}>
-        <CreateFacilityScreen onClose={onClose} />
-      </Drawer>
+
+      <Table
+        columns={columns}
+        dataSource={inventories?.data}
+        rowKey={(record) => record.MaMatHang}
+        pagination={false}
+      />
     </div>
   )
 }
 
-export default FacilityScreen
+export default InventoryScreen
