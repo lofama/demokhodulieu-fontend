@@ -2,6 +2,7 @@ import {
   Button,
   Col,
   Flex,
+  Modal,
   Pagination,
   Row,
   Select,
@@ -19,12 +20,16 @@ import {
   typeProducts,
   SaleSummaryField,
   saleSummaryFieldLabels,
+  SearchParams,
 } from './utils'
 
 const HomeScreen = () => {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [openModal, setOpenModal] = useState(false)
   const [tableName, setTableName] = useState<string | undefined>()
+  const [searchParams, setSearchParams] = useState<SearchParams[] | undefined>()
+  const [search, setSearch] = useState<SearchParams[] | undefined>()
   const [typeTime, setTypeTime] = useState<TypeDetail>(typeTimes[0])
   const [typeCustomer, setTypeCustomer] = useState<TypeDetail>(typeCustomers[0])
   const [typeProduct, setTypeProduct] = useState<TypeDetail>(typeProducts[0])
@@ -32,6 +37,7 @@ const HomeScreen = () => {
     page,
     pageSize,
     tableName,
+    search,
   })
   const [columnsTable, setColumnsTable] = useState<TableColumnsType>([])
   const [columns, setColumns] = useState<SaleSummaryField[]>([])
@@ -39,6 +45,8 @@ const HomeScreen = () => {
   useEffect(() => {
     const tableName = `vw_doanhthu_${typeTime.key}_${typeCustomer.key}_${typeProduct.key}`
     setTableName(tableName.toLocaleLowerCase())
+    setSearchParams(undefined)
+    setSearch(undefined)
   }, [typeTime, typeCustomer, typeProduct])
 
   useEffect(() => {
@@ -65,77 +73,71 @@ const HomeScreen = () => {
     <div>
       <Flex justify="space-between">
         <Typography.Title level={3}>Quản lí doanh thu</Typography.Title>
-        <Flex gap={10}>
-          <Button>{typeTime.title}</Button>
-          <Button
-            onClick={() => setTypeTime(typeTimes[typeTime.id + 1])}
-            disabled={typeTime.id === 4}
-          >
-            <FaArrowUp />
-          </Button>
-          <Button
-            onClick={() => setTypeTime(typeTimes[typeTime.id - 1])}
-            disabled={typeTime.id === 0}
-          >
-            <FaArrowDown />
-          </Button>
-        </Flex>
-        <Flex gap={10}>
-          <Button>{typeCustomer.title}</Button>
-          <Button
-            onClick={() => setTypeCustomer(typeCustomers[typeCustomer.id + 1])}
-            disabled={typeCustomer.id === 5}
-          >
-            <FaArrowUp />
-          </Button>
-          <Button
-            onClick={() => setTypeCustomer(typeCustomers[typeCustomer.id - 1])}
-            disabled={typeCustomer.id === 0}
-          >
-            <FaArrowDown />
-          </Button>
-        </Flex>
-        <Flex gap={10}>
-          <Button>{typeProduct.title}</Button>
-          <Button
-            onClick={() => setTypeProduct(typeProducts[typeProduct.id + 1])}
-            disabled={typeProduct.id === 3}
-          >
-            <FaArrowUp />
-          </Button>
-          <Button
-            onClick={() => setTypeProduct(typeProducts[typeProduct.id - 1])}
-            disabled={typeProduct.id === 0}
-          >
-            <FaArrowDown />
-          </Button>
-        </Flex>
-        <Button
-          onClick={() => {
-            setTypeTime(typeTimes[0])
-            setTypeCustomer(typeCustomers[0])
-            setTypeProduct(typeProducts[0])
-            setPage(1)
-            setPageSize(10)
-          }}
-        >
-          Reset
-        </Button>
+        <Button onClick={() => setOpenModal(true)}>Search</Button>
       </Flex>
       <Row gutter={[10, 10]}>
         <Col span={24}>
           <Flex justify="space-between" style={{ marginBottom: 20 }}>
             <Flex gap={10}>
-              <Select
-                mode="multiple"
-                style={{ width: '100%', minWidth: 200 }}
-                placeholder="Chọn nhiều mục"
-                options={columns.map((col) => ({
-                  label: saleSummaryFieldLabels[col],
-                  value: col,
-                }))}
-              />
+              <Button>{typeTime.title}</Button>
+              <Button
+                onClick={() => setTypeTime(typeTimes[typeTime.id + 1])}
+                disabled={typeTime.id === 4}
+              >
+                <FaArrowUp />
+              </Button>
+              <Button
+                onClick={() => setTypeTime(typeTimes[typeTime.id - 1])}
+                disabled={typeTime.id === 0}
+              >
+                <FaArrowDown />
+              </Button>
             </Flex>
+            <Flex gap={10}>
+              <Button>{typeCustomer.title}</Button>
+              <Button
+                onClick={() =>
+                  setTypeCustomer(typeCustomers[typeCustomer.id + 1])
+                }
+                disabled={typeCustomer.id === 5}
+              >
+                <FaArrowUp />
+              </Button>
+              <Button
+                onClick={() =>
+                  setTypeCustomer(typeCustomers[typeCustomer.id - 1])
+                }
+                disabled={typeCustomer.id === 0}
+              >
+                <FaArrowDown />
+              </Button>
+            </Flex>
+            <Flex gap={10}>
+              <Button>{typeProduct.title}</Button>
+              <Button
+                onClick={() => setTypeProduct(typeProducts[typeProduct.id + 1])}
+                disabled={typeProduct.id === 3}
+              >
+                <FaArrowUp />
+              </Button>
+              <Button
+                onClick={() => setTypeProduct(typeProducts[typeProduct.id - 1])}
+                disabled={typeProduct.id === 0}
+              >
+                <FaArrowDown />
+              </Button>
+            </Flex>
+            <Button
+              onClick={() => {
+                setTypeTime(typeTimes[0])
+                setTypeCustomer(typeCustomers[0])
+                setTypeProduct(typeProducts[0])
+                setPage(1)
+                setPageSize(10)
+              }}
+            >
+              Reset
+            </Button>
             <Pagination
               current={page}
               pageSize={pageSize}
@@ -160,6 +162,60 @@ const HomeScreen = () => {
           )}
         </Col>
       </Row>
+
+      <Modal
+        title="Tìm kiếm"
+        open={openModal}
+        keyboard={false}
+        onCancel={() => setOpenModal(false)}
+        onOk={() => {
+          setSearch(searchParams)
+          setOpenModal(false)
+        }}
+        onClose={() => setOpenModal(false)}
+        width={600}
+      >
+        <div style={{ maxHeight: 450, overflowY: 'auto', paddingRight: 8 }}>
+          {columns.length > 0 &&
+            columns.map((col) => (
+              <Flex
+                key={col}
+                align="center"
+                justify="space-between"
+                style={{
+                  marginBottom: 16,
+                  padding: '8px 0',
+                  borderBottom: '1px solid #f0f0f0',
+                }}
+              >
+                <Typography.Text strong style={{ minWidth: 150 }}>
+                  {saleSummaryFieldLabels[col]}
+                </Typography.Text>
+                <Select
+                  mode="tags"
+                  style={{ width: '100%' }}
+                  placeholder="Nhập nhiều giá trị"
+                  onChange={(values) => {
+                    if (values.length > 0) {
+                      setSearchParams((prev) => {
+                        const params = prev ? [...prev] : []
+                        const idx = params.findIndex((p) => p.key === col)
+
+                        if (idx > -1) {
+                          params[idx] = { key: col, value: values }
+                        } else {
+                          params.push({ key: col, value: values })
+                        }
+                        return params.length > 0 ? params : undefined
+                      })
+                    }
+                  }}
+                  value={searchParams?.find((p) => p.key === col)?.value || []}
+                />
+              </Flex>
+            ))}
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -28,6 +28,11 @@ export interface SaleSumary {
 
 export type SaleSummaryField = keyof SaleSumary
 
+export interface SearchParams {
+  key: SaleSummaryField
+  value: string[]
+}
+
 export interface TypeDetail {
   id: number
   title: string
